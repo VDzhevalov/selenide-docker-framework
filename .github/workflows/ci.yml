@@ -1,0 +1,79 @@
+name: selenide-docker-framework CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    - cron: '0 2 * * *'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Podman
+        uses: redhat-actions/podman-install@v1
+
+      - name: Build container with Selenide tests
+        run: podman build -t selenide-tests .docker/tests
+
+      - name: Run container to execute tests and copy Allure report
+        run: |
+          podman volume create allure-report-volume
+          podman run --name selenide-container -v allure-report-volume:/app/build/allure-report:Z selenide-tests
+          mkdir -p ./build/allure-report
+          podman cp selenide-container:/app/build/allure-report ./build/
+          podman rm selenide-container
+
+      - name: Upload report artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: allure-report
+          path: build/allure-report
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set date as env variable
+        run: echo "REPORT_DATE=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+
+      - name: Download report artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: allure-report
+          path: public/reports/${{ env.REPORT_DATE }}
+
+      - name: Generate redirect, index and changelog
+        run: |
+          echo '<meta http-equiv="refresh" content="0; url=reports/${{ env.REPORT_DATE }}/" />' > public/index.html
+          mkdir -p public/reports
+          echo '<html><body><h1>Allure Report History</h1><ul>' > public/reports/index.html
+          for d in $(ls public/reports | sort); do
+            echo "<li><a href='${d}/'>${d}</a></li>" >> public/reports/index.html
+          done
+          echo '</ul></body></html>' >> public/reports/index.html
+
+          echo '<html><body><h1>Allure Changelog</h1><ul>' > public/changelog.html
+          for d in $(ls public/reports | sort); do
+            if [ -f public/reports/$d/widgets/summary.json ]; then
+              passed=$(jq '.stat.passed' public/reports/$d/widgets/summary.json)
+              failed=$(jq '.stat.failed' public/reports/$d/widgets/summary.json)
+              echo "<li><strong>${d}:</strong> ✅ ${passed} passed, ❌ ${failed} failed — <a href='reports/${d}/'>View Report</a></li>" >> public/changelog.html
+            fi
+          done
+          echo '</ul></body></html>' >> public/changelog.html
+
+      - name: Publish Allure reports to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
