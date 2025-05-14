@@ -15,8 +15,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up Podman
-        uses: redhat-actions/podman-install@v1
+#      - name: Set up Podman
+#        uses: redhat-actions/podman-install@v1
+      - name: Install Podman manually
+        run: |
+          sudo apt-get update
+          sudo apt-get -y install podman
 
       - name: Build container with Selenide tests
         run: podman build -t selenide-tests .docker/tests
