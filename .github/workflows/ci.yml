@@ -55,6 +55,12 @@ jobs:
           name: allure-report
           path: public/reports/${{ env.REPORT_DATE }}
 
+      - name: Move report files to correct location
+        run: |
+            mv public/reports/${{ env.REPORT_DATE }}/allure-report/allureReport/* public/reports/${{ env.REPORT_DATE }}/
+            rmdir public/reports/${{ env.REPORT_DATE }}/allure-report/allureReport || true
+            rmdir public/reports/${{ env.REPORT_DATE }}/allure-report || true   
+
       - name: Generate redirect, index and changelog
         run: |
           echo '<meta http-equiv="refresh" content="0; url=reports/${{ env.REPORT_DATE }}/" />' > public/index.html
