@@ -20,14 +20,14 @@
 │   └── web/                   # Dockerfile для веб-сервера Allure
 │       └── Dockerfile
 ├── .github/
-│   └── workflows/
+│   └── workflows/             # Сценарій для GitHub Actions (CI)
 │       └── ci.yml
-├── src/test/java/ua/kuli/
+├── src/test/java/ua/kuli/     # Тести. Замість демонстаціонного ua/kuli/ створюєте свій пакет тестів і вперед.
 │   ├── pages/
 │   ├── data/
 │   └── tests/
-├── src/test/resources/
-│   └── test-data/games.json
+├── src/test/resources/        
+│   └── test-data/games.json   
 ├── build.gradle
 ├── settings.gradle
 ├── .gitignore
