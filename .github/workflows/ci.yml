@@ -75,8 +75,8 @@ jobs:
           echo '<html><body><h1>Allure Changelog</h1><ul>' > public/changelog.html
           for d in $(ls public/reports | sort); do
             if [ -f public/reports/$d/widgets/summary.json ]; then
-              passed=$(jq '.stat.passed' public/reports/$d/widgets/summary.json)
-              failed=$(jq '.stat.failed' public/reports/$d/widgets/summary.json)
+              passed=$(jq '.statistic.passed' public/reports/$d/widgets/summary.json)
+              failed=$(jq '.statistic.failed' public/reports/$d/widgets/summary.json)
               echo "<li><strong>${d}:</strong> ✅ ${passed} passed, ❌ ${failed} failed — <a href='reports/${d}/'>View Report</a></li>" >> public/changelog.html
             fi
           done
