@@ -99,6 +99,20 @@ podman run -d --name report-server -p 8080:8080 -v ${PWD}/build/allure-report:/a
     }
 ```
 
+## 🌐 Налаштування GitHub Pages
+
+💡 **Примітка:** Після першого успішного деплою гілка `gh-pages` буде створена автоматично, і ти отримаєш посилання на сайт:
+`https://<user>.github.io/<repo>/`
+
+Щоб опублікувати Allure-звіти на GitHub Pages:
+
+1. Перейди в **Settings → Pages** репозиторію
+2. В секції **"Build and deployment"**:
+  - Source: `Deploy from a branch`
+  - Branch: `gh-pages`, Folder: `/ (root)`
+3. У **Settings → Actions → General → Workflow permissions**:
+  - Увімкни ✅ `Read and write permissions`
+
 ## 🤖 CI з GitHub Actions
 
 - Збірка образу
