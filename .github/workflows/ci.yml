@@ -57,9 +57,8 @@ jobs:
 
       - name: Move report files to correct location
         run: |
-            mv public/reports/${{ env.REPORT_DATE }}/allure-report/allureReport/* public/reports/${{ env.REPORT_DATE }}/
-            rmdir public/reports/${{ env.REPORT_DATE }}/allure-report/allureReport || true
-            rmdir public/reports/${{ env.REPORT_DATE }}/allure-report || true   
+          mv public/reports/${{ env.REPORT_DATE }}/allure-report/* public/reports/${{ env.REPORT_DATE }}/
+          rmdir public/reports/${{ env.REPORT_DATE }}/allure-report || true  
 
       - name: Generate redirect, index and changelog
         run: |
