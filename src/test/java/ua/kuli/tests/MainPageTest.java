@@ -1,6 +1,7 @@
 package ua.kuli.tests;
 
 import io.qameta.allure.Description;
+import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -21,6 +22,7 @@ public class MainPageTest extends Setup {
 
     MainPage mainPage = new MainPage();
 
+    @Feature("Full game content")
     @Story("ShowAllTranslations")
     @ParameterizedTest
     @MethodSource("ua.kuli.data.GameData#getDataFromJson")
@@ -33,6 +35,7 @@ public class MainPageTest extends Setup {
         screenshot();
     }
 
+    @Feature("MainPage Title & HeaderMenu")
     @Story("MainPage Title")
     @Description()
     @Test
@@ -40,6 +43,8 @@ public class MainPageTest extends Setup {
         open("/");
         mainPage.pageTitleShouldContain("Каталог української локалізації ігор");
     }
+
+    @Feature("MainPage Title & HeaderMenu")
     @Story("MainPage HeaderMenu")
     @Description()
     @Test
@@ -48,6 +53,7 @@ public class MainPageTest extends Setup {
         mainPage.shouldHaveMenuLinks();
     }
 
+    @Feature("Full game content")
     @Story("Game Title")
     @Description()
     @Test
@@ -59,7 +65,7 @@ public class MainPageTest extends Setup {
         screenshot();
     }
 
-
+    @Feature("Demonstration of a failed test")
     @Description()
     @Test
     void iWillFail() {
