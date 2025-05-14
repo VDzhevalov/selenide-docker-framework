@@ -27,9 +27,8 @@ jobs:
 
       - name: Run container to execute tests and copy Allure report
         run: |
-          podman volume create allure-report-volume
-          podman run --name selenide-container -v allure-report-volume:/app/build/allure-report:Z selenide-tests
-          mkdir -p ./build/allure-report
+          podman run --name selenide-container selenide-tests
+          mkdir -p ./build
           podman cp selenide-container:/app/build/allure-report ./build/
           podman rm selenide-container
 
