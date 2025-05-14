@@ -68,7 +68,9 @@ jobs:
           mkdir -p public/reports
           echo '<html><body><h1>Allure Report History</h1><ul>' > public/reports/index.html
           for d in $(ls public/reports | sort); do
-            echo "<li><a href='${d}/'>${d}</a></li>" >> public/reports/index.html
+            if [ -d public/reports/$d ] && [ -f public/reports/$d/index.html ]; then
+              echo "<li><a href='${d}/'>${d}</a></li>" >> public/reports/index.html
+            fi
           done
           echo '</ul></body></html>' >> public/reports/index.html
 
