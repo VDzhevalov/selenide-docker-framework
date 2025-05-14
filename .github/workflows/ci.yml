@@ -23,7 +23,7 @@ jobs:
           sudo apt-get -y install podman
 
       - name: Build container with Selenide tests
-        run: podman build -t selenide-tests .docker/tests
+        run: podman build -t selenide-tests -f .docker/tests/Dockerfile .
 
       - name: Run container to execute tests and copy Allure report
         run: |
