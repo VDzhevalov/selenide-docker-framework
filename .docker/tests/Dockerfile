@@ -1,6 +1,6 @@
 # Образ для запуску тестів і генерації Allure-репорту
 
-FROM maven:3.9.4-eclipse-temurin-17 AS runner
+FROM docker.io/maven:3.9.4-eclipse-temurin-17 AS runner
 
 USER root
 

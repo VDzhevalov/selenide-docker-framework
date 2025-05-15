@@ -1,6 +1,6 @@
 # Образ для локального запуску веб-сервера для перегляду Allure-репорта
 
-FROM openjdk:17-slim AS runtime
+FROM docker.io/openjdk:17-slim AS runtime
 
 RUN apt-get update && apt-get install -y \
     python3 \
