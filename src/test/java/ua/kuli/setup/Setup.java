@@ -17,7 +17,6 @@ public class Setup {
         Configuration.browser = "chrome";
         Configuration.baseUrl = "https://kuli.com.ua";
         Configuration.headless = true;
-//        Configuration.reportsFolder = "build/reports/tests";
         Configuration.browserCapabilities =
                 new ChromeOptions()
                         .addArguments("--no-sandbox")
