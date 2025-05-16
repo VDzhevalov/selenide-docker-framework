@@ -8,8 +8,12 @@ if [ -z "$1" ]; then
   exit 1
 fi
 
+COMPONENT="$1"
+
+PROJECT_ROOT="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
+
 # Перевірка структури каталогів
-if [ ! -d "$ROOT_DIR/.docker/tests" ] || [ ! -d "$ROOT_DIR/.docker/web" ]; then
+if [ ! -d "$PROJECT_ROOT/.docker/tests" ] || [ ! -d "$PROJECT_ROOT/.docker/web" ]; then
   echo "❌ Структура .docker/ порушена. Очікується:"
   echo "  .docker/"
   echo "  ├── tests/Dockerfile"
@@ -17,10 +21,8 @@ if [ ! -d "$ROOT_DIR/.docker/tests" ] || [ ! -d "$ROOT_DIR/.docker/web" ]; then
   exit 1
 fi
 
-COMPONENT="$1"
-ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-DOCKERFILE_PATH="$ROOT_DIR/.docker/$COMPONENT/Dockerfile"
-CONTEXT_PATH="$ROOT_DIR"
+DOCKERFILE_PATH="$PROJECT_ROOT/.docker/$COMPONENT/Dockerfile"
+CONTEXT_PATH="$PROJECT_ROOT"
 IMAGE_NAME="selenide-${COMPONENT}-image"
 
 # 2. Перевірка чи існує Dockerfile

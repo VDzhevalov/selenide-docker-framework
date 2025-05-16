@@ -6,14 +6,14 @@ COMMAND="$1"
 ACTION="$2"
 THIRD_ARG="$3"
 
-ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
 WEB_REPORT_TARGET_PATH="/app/build/allure-report"
-TEST_REPORT_TARGET_PATH="/app/build/reports/allure-report"
+TEST_REPORT_TARGET_PATH="/app/build/allure-report"
 
 build_image() {
   COMPONENT="$1"
-  DOCKERFILE_PATH="$ROOT_DIR/.docker/$COMPONENT/Dockerfile"
-  EXPECTED_PATH="$ROOT_DIR/.docker/$COMPONENT"
+  DOCKERFILE_PATH="$PROJECT_ROOT/.docker/$COMPONENT/Dockerfile"
+  EXPECTED_PATH="$PROJECT_ROOT/.docker/$COMPONENT"
 
   if [ ! -d "$EXPECTED_PATH" ] || [ ! -f "$DOCKERFILE_PATH" ]; then
     echo "❌ Очікується структура: $EXPECTED_PATH/Dockerfile"
@@ -24,7 +24,7 @@ build_image() {
   IMAGE_NAME="selenide-${COMPONENT}-image"
 
   echo "🔨 Створюємо образ '$IMAGE_NAME' з Dockerfile '$DOCKERFILE_PATH'"
-  podman build -f "$DOCKERFILE_PATH" -t "$IMAGE_NAME" "$ROOT_DIR"
+  podman build -f "$DOCKERFILE_PATH" -t "$IMAGE_NAME" "$PROJECT_ROOT"
   echo "✅ Образ зібрано: $IMAGE_NAME"
 }
 
@@ -42,8 +42,10 @@ run_web_server() {
     exit 1
   fi
 
-  echo "🚀 Запускаємо вебсервер з репортами з: $HOST_REPORT_PATH"
-  podman run --rm -p 8080:80 \
+CONT_NAME="selenide-${COMMAND}-server"
+
+  echo "🚀 Запускаємо вебсервер $CONT_NAME з репортами з: $HOST_REPORT_PATH"
+  podman run --rm --name "$CONT_NAME" -d -p 8080:8080 \
     -v "$HOST_REPORT_PATH":"$WEB_REPORT_TARGET_PATH":Z \
     selenide-web-image
 }
