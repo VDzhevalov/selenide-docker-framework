@@ -9,4 +9,4 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /app
 
-CMD ["sh", "-c", "python3 -m http.server 8080 --directory build/allure-report"]
+CMD ["sh", "-c", "python3 -m http.server 8080 --directory build/allure-report", "--bind", "0.0.0.0"]
